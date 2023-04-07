@@ -31,7 +31,7 @@ settings:
   restart-script: ./start.sh
   netty-threads: 4
   sample-count: 12
-  bungeecord: false
+  bungeecord: true
 advancements:
   disable-saving: false
   disabled:
