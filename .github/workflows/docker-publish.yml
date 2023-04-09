@@ -1,0 +1,30 @@
+name: Docker hub publish
+
+on:
+  push:
+    branches: [ "master" ]
+ 
+env:
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_LOGIN }}/${{ github.event.repository.name }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Test 1
+        run: echo $GITHUB_SHA
+      - name: Test 2
+        run: echo $IMAGE_TAG
+        
+      - name: Log into registry 
+        run:  echo ${{ secrets.DOCKERHUB_PASSWD }} | docker login -u ${{ secrets.DOCKERHUB_LOGIN }} --password-stdin
+
+      - name: Build image
+        run:  docker build -t $IMAGE_NAME:$GITHUB_SHA -f ./Dockerfile .
+      
+      - name: Push image
+        run:  docker push $IMAGE_NAME:$GITHUB_SHA
