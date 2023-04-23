@@ -3,9 +3,10 @@ pipeline{
         label "agent1"
     }
     stages{
-        stage("A"){
+        stage("Werf."){
             steps{
-                echo "========executing A========"
+                checkout scm
+                sh ls
             }
             post{
                 success{
