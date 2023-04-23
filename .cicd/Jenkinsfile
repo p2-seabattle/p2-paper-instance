@@ -5,8 +5,7 @@ pipeline{
     stages{
         stage("A"){
             steps{
-                pwd
-                ls -al
+                echo "========executing A========"
             }
             post{
                 success{
