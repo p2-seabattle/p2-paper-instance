@@ -1,5 +1,5 @@
 project: p2
 configVersion: 1
 ---
-image p2-instance 
-dockerfile Dockerfile
+image: p2-instance 
+dockerfile: Dockerfile
