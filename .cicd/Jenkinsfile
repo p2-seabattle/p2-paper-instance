@@ -5,8 +5,7 @@ pipeline{
     stages{
         stage("Werf"){
             steps{
-                sh "ls"
-                sh "pwd"
+                sh "werf converge --repo=registry.1437703-cz27429.tw1.ru:32000/p2-paper-instance --insecure-registry --kube-config=/root/k8s"
             }
             post{
                 success{
