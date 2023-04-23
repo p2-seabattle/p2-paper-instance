@@ -5,8 +5,8 @@ pipeline{
     stages{
         stage("Werf."){
             steps{
-                checkout scm
                 sh ls
+                sh pwd
             }
             post{
                 success{
