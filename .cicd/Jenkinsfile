@@ -1,7 +1,5 @@
 pipeline{
-    agent{
-        label "werf"
-    }
+    agent { label "werf" }
     stages{
         stage("Build"){
             steps{
