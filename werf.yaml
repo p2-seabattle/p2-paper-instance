@@ -1,4 +1,4 @@
-project: p2
+project: default
 configVersion: 1
 ---
 image: p2-instance 
