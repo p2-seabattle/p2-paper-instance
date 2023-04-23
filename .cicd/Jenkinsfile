@@ -3,7 +3,9 @@ pipeline{
     stages{
         stage("Build"){
             steps{
-                echo "PIPLINEEEE!!!!!!"
+                pwd
+                ls -l
+                werf converge --repo=registry.1437703-cz27429.tw1.ru:32000/p2-paper-instance --insecure-registry --kube-config=/root/k8s
             }
             post{
                 always{
