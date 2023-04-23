@@ -9,10 +9,10 @@ pipeline{
             }
             post{
                 success{
-                    echo "========A executed successfully========"
+                    echo "[========A executed successfully========]"
                 }
                 failure{
-                    echo "========A execution failed========"
+                    echo "[========A execution failed========]"
                 }
             }
         }
