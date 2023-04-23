@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: p2-server
-        image: {{ $.Values.werf.image.p2-instance }}
+        image: {{ $.Values.werf.image "p2-instance" }}
         imagePullPolicy: Always
         ports:
         - containerPort: 25565
