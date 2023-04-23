@@ -1,3 +1,4 @@
+echo "HELLO BITCHES"
 java \
     -XX:+UseG1GC \
     -XX:+UseStringDeduplication \
