@@ -3,10 +3,10 @@ pipeline{
         label "agent1"
     }
     stages{
-        stage("Werf."){
+        stage("Werf"){
             steps{
-                sh ls
-                sh pwd
+                sh "ls"
+                sh "pwd"
             }
             post{
                 success{
