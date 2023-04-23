@@ -1,9 +1,11 @@
 pipeline{
-    agent { label "werf" }
+    agent{
+        label "agent1"
+    }
     stages{
-        stage("Build"){
+        stage("A"){
             steps{
-                pwd
+                echo "========executing A========"
             }
             post{
                 always{
@@ -16,6 +18,17 @@ pipeline{
                     echo "========A execution failed========"
                 }
             }
+        }
+    }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+        }
+        failure{
+            echo "========pipeline execution failed========"
         }
     }
 }
