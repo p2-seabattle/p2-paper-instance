@@ -1,5 +1,7 @@
-project: default
+project: p2-instance
 configVersion: 1
+deploy:
+  namespace: default
 ---
 image: p2-instance 
 dockerfile: Dockerfile
