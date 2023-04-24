@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: p2-server
+  name: p2-paper-instance
 spec:
   selector:
     matchLabels:
-      app: p2-server
+      app: p2-paper-instance
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: p2-server
+        app: p2-paper-instance
         lang: java
         cycle: plugin
     spec:
       containers:
-      - name: p2-server
-        image: {{ index $.Values.werf.image "p2-instance" }}
+      - name: p2-paper-instance
+        image: {{ index $.Values.werf.image "p2-paper-instance" }}
         imagePullPolicy: Always
         ports:
         - containerPort: 25565
@@ -48,12 +48,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: p2-server-service
+  name: p2-paper-instance-service
   namespace: default
 spec:
   type: ClusterIP
   selector:
-    app: p2-server
+    app: p2-paper-instance
   ports:
     - protocol: TCP
       port: 25565

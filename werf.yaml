@@ -1,7 +1,7 @@
-project: p2-instance
+project: p2-paper-instance
 configVersion: 1
 deploy:
   namespace: default
 ---
-image: p2-instance 
+image: p2-paper-instance 
 dockerfile: Dockerfile
