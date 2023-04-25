@@ -5,15 +5,7 @@ pipeline{
     stages{
         stage("Werf"){
             steps{
-                sh "/root/.trdl/repositories/werf/releases/1.2.214+fix3/linux-amd64/bin/werf converge --repo=registry.1437703-cz27429.tw1.ru:32000/p2-paper-instance --insecure-registry --kube-config=/root/k8s"
-            }
-            post{
-                success{
-                    echo "[========A executed successfully========]"
-                }
-                failure{
-                    echo "[========A execution failed========]"
-                }
+                sh "/root/.trdl/repositories/werf/releases/1.2.214+fix3/linux-amd64/bin/werf converge --repo=registry.1437703-cz27429.tw1.ru:32000/p2-paper-instance --insecure-registry"
             }
         }
     }
