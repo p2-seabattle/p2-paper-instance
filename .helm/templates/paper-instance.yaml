@@ -34,7 +34,7 @@ spec:
               command: [
                 "/rcon/p2-rcon", 
                 "--ip", "127.0.0.1:1008",
-                "--pass", "test_pass",
+                "--pass", "rcon",
                 "--key", "test",
                 "--request-json", "{\"test\":\"message\"}"
               ]
