@@ -1,7 +1,7 @@
 {
     "grpc": {
         "reconnection_time": 10,
-        "ip": "p2-unity-balancer-service",
+        "ip": "http://p2-unity-balancer-service",
         "port": 80
     }
 }
