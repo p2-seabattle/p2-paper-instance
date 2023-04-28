@@ -1,4 +1,4 @@
-echo "HELLO BITCHES"
+echo "[--------starting--------]"
 java \
     -XX:+UseG1GC \
     -XX:+UseStringDeduplication \
