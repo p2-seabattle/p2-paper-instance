@@ -1,6 +1,6 @@
 FROM codelime/p2-rcon:latest AS rcon
 
-FROM codelime/p2-paper-base:alpine AS final
+FROM codelime/p2-paper-base:alpaine AS final
 WORKDIR /app
 COPY . .
 COPY --from=rcon /rcon /rcon
