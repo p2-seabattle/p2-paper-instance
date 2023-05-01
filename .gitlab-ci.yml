@@ -1,0 +1,30 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - deploy
+
+default:
+  tags: [werf]
+
+before_script:
+  - type trdl && . $(trdl use werf 1.2 stable)
+  - type werf && source $(werf ci-env gitlab --as-file)
+
+werf build:
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "push"
+  script:
+    - werf build
+
+werf deploy:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH 
+  script:
+    - werf converge --repo=registry.1437703-cz27429.tw1.ru:32000/p2-paper-instance --insecure-registry 
+      
