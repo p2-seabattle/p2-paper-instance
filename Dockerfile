@@ -1,6 +1,6 @@
 FROM codelime/p2-rcon:latest AS rcon
 
-FROM codelime/p2-paper-base:latest AS final
+FROM registry.1437703-cz27429.tw1.ru:32000/p2-paper-base:latest AS final
 WORKDIR /app
 COPY . .
 COPY --from=rcon /rcon /rcon
