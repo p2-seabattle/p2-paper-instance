@@ -1,3 +1,4 @@
+#!/bin/sh
 echo "[--------starting--------]"
 java \
     -XX:+UseG1GC \
