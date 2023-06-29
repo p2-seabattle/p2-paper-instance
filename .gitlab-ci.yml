@@ -18,7 +18,7 @@ configure:
   script:
     - git clone --branch $CI_COMMIT_BRANCH --recurse-submodules -j8 http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.1437703-cz27429.tw1.ru/p2-seabattle/p2-config-instance.git
     - dotnet build p2-config-instance/src/Config/Config.Paper/Config.Paper.csproj --output app
-    - app/Config.Paper plugins/p2
+    - app/Config.Paper plugins/p2-ignore
     - rm -rf app
     - rm -rf p2-config-instance
 

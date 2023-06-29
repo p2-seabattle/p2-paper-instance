@@ -3,6 +3,7 @@ FROM codelime/p2-rcon:latest AS rcon
 FROM registry.1437703-cz27429.tw1.ru:32000/p2-paper-base:latest AS final
 WORKDIR /app
 COPY . .
+COPY /plugins/p2-ignore /plugins/p2
 COPY --from=rcon /rcon /rcon
 #ARG DEBIAN_FRONTEND=noninteractive
 #RUN apt update
