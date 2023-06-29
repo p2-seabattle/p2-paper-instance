@@ -21,7 +21,7 @@ configure:
     - rm -rf p2-config-instance
     - ls -l
     - ls -l app
-    - dotnet run app/Config.Paper plugins/p2
+    - app/Config.Paper plugins/p2
     - ls -l
     - ls -l plugins/p2
 
