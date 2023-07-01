@@ -39,6 +39,6 @@ werf deploy master:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == "dev"
   script:
-    - werf converge --repo=registry.$HOST_NAME:32000/p2-paper-instance --insecure-registry
-  variables:
-    HOST_NAME: $HOST_NAME
+    - werf converge --repo=registry.$HOST_NAME:32000/p2-paper-instance \
+        --insecure-registry \
+        --set "HOST_NAME=$HOST_NAME"
