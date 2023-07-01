@@ -13,14 +13,14 @@ before_script:
   - type trdl && . $(trdl use werf 1.2 stable)
   - type werf && source $(werf ci-env gitlab --as-file)
 
-configure:
-  stage: config
-  script:
-    - git clone --branch $CI_COMMIT_BRANCH --recurse-submodules -j8 http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.1437703-cz27429.tw1.ru/p2-seabattle/p2-config-instance.git
-    - dotnet build p2-config-instance/src/Config/Config.Paper/Config.Paper.csproj --output app
-    - app/Config.Paper plugins/p2-ignore
-    - rm -rf app
-    - rm -rf p2-config-instance
+# configure:
+#   stage: config
+#   script:
+#     - git clone --branch $CI_COMMIT_BRANCH --recurse-submodules -j8 http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.1437703-cz27429.tw1.ru/p2-seabattle/p2-config-instance.git
+#     - dotnet build p2-config-instance/src/Config/Config.Paper/Config.Paper.csproj --output app
+#     - app/Config.Paper plugins/p2-ignore
+#     - rm -rf app
+#     - rm -rf p2-config-instance
 
 werf build:
   stage: build
