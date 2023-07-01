@@ -31,6 +31,7 @@ werf build:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "pipeline"
   script:
+    - echo $HOST_NAME
     - werf build
   variables:
     HOST_NAME: $HOST_NAME
