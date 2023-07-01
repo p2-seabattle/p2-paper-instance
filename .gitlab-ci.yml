@@ -12,6 +12,7 @@ default:
 before_script:
   - type trdl && . $(trdl use werf 1.2 stable)
   - type werf && source $(werf ci-env gitlab --as-file)
+  - HOST_NAME=${CI_SERVER_HOST:7}
 
 # configure:
 #   stage: config
@@ -38,4 +39,4 @@ werf deploy master:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_BRANCH == "dev"
   script:
-    - werf converge --repo=registry.1437703-cz27429.tw1.ru:32000/p2-paper-instance --insecure-registry 
+    - werf converge --repo=registry.$HOST_NAME:32000/p2-paper-instance --insecure-registry 

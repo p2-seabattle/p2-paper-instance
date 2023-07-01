@@ -4,7 +4,7 @@ deploy:
   namespace: default
 ---
 image: _rcon
-from: registry.1437703-cz27429.tw1.ru:32000/p2-rcon
+from: registry.{{ env "HOST_NAME" }}:32000/p2-rcon
 fromLatest: true
 ---
 image: _config
@@ -39,7 +39,7 @@ shell:
     - ls p2_config
 ---
 image: _paper_dotnet
-from: registry.1437703-cz27429.tw1.ru:32000/p2-paper-base
+from: registry.{{ env "HOST_NAME" }}:32000/p2-paper-base
 fromLatest: true
 shell:
   install:
