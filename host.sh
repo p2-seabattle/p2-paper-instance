@@ -26,4 +26,4 @@ java \
     -Dfile.encoding=UTF-8 \
     --add-opens java.base/java.lang=ALL-UNNAMED \
     --add-opens java.base/java.lang.reflect=ALL-UNNAMED \
-    -jar paper-1.19.4-491.jar nogui
+    -jar paper.jar nogui

@@ -3,5 +3,166 @@ configVersion: 1
 deploy:
   namespace: default
 ---
-image: p2-paper-instance 
-dockerfile: Dockerfile
+image: _rcon
+from: registry.1437703-cz27429.tw1.ru:32000/p2-rcon
+fromLatest: true
+---
+image: _config
+from: mcr.microsoft.com/dotnet/sdk:7.0-alpine-amd64
+git:
+  - url: http://{{ env "CI_REGISTRY_USER" }}:{{ env "CI_JOB_TOKEN" }}@{{ env "CI_SERVER_HOST" }}/p2-seabattle/p2-config-instance.git
+    branch: {{ env "CI_COMMIT_BRANCH" }}
+    add: /src
+    to: /cfg
+    stageDependencies:
+      install: '**/*'
+shell:
+  install:
+    - dotnet restore cfg/Config/Config.Paper/Config.Paper.csproj
+  beforeSetup:
+    - dotnet build cfg/Config/Config.Paper/Config.Paper.csproj --no-restore -c Release
+  setup:
+    - dotnet publish cfg/Config/Config.Paper/Config.Paper.csproj --output app -c Release /p:UseAppHost=false
+---
+image: _config_executor
+from: mcr.microsoft.com/dotnet/runtime:7.0-alpine-amd64
+import:
+  - image: _config
+    add: /app
+    to: /app
+    before: setup
+shell:
+  setup:
+    - cd /app
+    - dotnet Config.Paper.dll ../p2_config
+    - cd ..
+    - ls p2_config
+---
+image: _paper_dotnet
+from: registry.1437703-cz27429.tw1.ru:32000/p2-paper-base
+fromLatest: true
+shell:
+  install:
+    - apt-get update -y
+    - DEBIAN_FRONTEND=noninteractive
+    - apt-get install -y --no-install-recommends \
+      curl \
+      ca-certificates \
+      \
+      libc6 \
+      libgcc1 \
+      libgssapi-krb5-2 \
+      libicu66 \
+      libssl1.1 \
+      libstdc++6 \
+      zlib1g \
+    - rm -rf /var/lib/apt/lists/*
+  setup:
+    - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin -Channel 6.0 -Runtime dotnet -InstallDir /usr/share/dotnet
+    - ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+---
+image: _result
+fromImage: _paper_dotnet
+git:
+  - add: /
+    to: /__cache
+    stageDependencies:
+      install: '**/*'
+import:
+  - image: _rcon
+    add: /app
+    to: /rcon
+    before: install
+shell:
+  install:
+    - rsync -a /__cache/* /server/
+    - cd server
+    - chmod +x ./host.sh
+---
+image: p2-paper-instance
+fromImage: _result
+import:
+  - image: _config_executor
+    add: /p2_config
+    to: /server/plugins/p2-export
+    before: install
+shell:
+  install:
+    - rsync -a /server/plugins/p2-export/* /server/plugins/p2/
+docker:
+  ENTRYPOINT: /server/host.sh
+
+# ENV DOTNET_VERSION=7.0.8
+# 
+# # Install .NET Runtime
+# RUN wget -O dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_VERSION/dotnet-runtime-$DOTNET_VERSION-linux-musl-x64.tar.gz \
+#     && dotnet_sha512='4a30cdf834733fa92c15d23df15a58440623ce471f4afe4986e5c32722d81215adc418a3b953712fd1bdf41eb9b87893ace7cfd1c35d781b1075bf69b8b64e12' \
+#     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
+#     && mkdir -p /usr/share/dotnet \
+#     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet \
+#     && rm dotnet.tar.gz \
+#     && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+
+# FROM registry.1437703-cz27429.tw1.ru:32000/p2-paper-base:latest AS final
+# WORKDIR /app
+# COPY . .
+# COPY /plugins/p2-ignore /plugins/p2
+# COPY --from=rcon /rcon /rcon
+# #ARG DEBIAN_FRONTEND=noninteractive
+# #RUN apt update
+# #RUN apt install -y libicu-dev
+# RUN chmod +x /app/host.sh
+# ENTRYPOINT [ "/app/host.sh" ]
+
+
+#image: _raw
+#from: mcr.microsoft.com/dotnet/sdk:7.0-alpine-amd64
+#git:
+#  - add: /src
+#    to: /raw
+#    stageDependencies:
+#      install: '**/*'
+#shell:
+#  install:
+#    - dotnet restore raw/ResourcePack/ResourcePack.Raw/ResourcePack.Raw.csproj
+#  beforeSetup:
+#    - dotnet build raw/ResourcePack/ResourcePack.Raw/ResourcePack.Raw.csproj --no-restore -c Release
+#  setup:
+#    - dotnet publish raw/ResourcePack/ResourcePack.Raw/ResourcePack.Raw.csproj --output app -c Release /p:UseAppHost=false
+#---
+#image: _executor
+#from: mcr.microsoft.com/dotnet/runtime:7.0-alpine-amd64
+#shell:
+#  install:
+#    - apk update
+#    - apk add rsync
+#    - apk add curl
+#---
+#image: _result
+#fromImage: _executor
+#import:
+#  - image: _config
+#    add: /app
+#    to: /a
+#    before: setup
+#  - image: _raw
+#    add: /app
+#    to: /b
+#    before: setup
+#shell:
+#  setup:
+#   - rsync -au /a/* /app/
+#   - rsync -au /b/* /app/
+#   - cd /app
+#   - dotnet ResourcePack.Raw.dll --dll Config.Instance.dll
+#   - curl -X PUT --header "Content-Type:multipart/form-data" -F "bin=@output.zip;type=application/zip" --request PUT http://1437703-cz27429.tw1.ru:30070/files/set/rp-{{ env "CI_COMMIT_BRANCH" }}.zip?root=pass
+#
+#
+## http://1437703-cz27429.tw1.ru:30070/files/set/rp-${CI_COMMIT_BRANCH}.zip?root=pass
+##
+##    - git clone --branch $CI_COMMIT_BRANCH --recurse-submodules -j8 http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.1437703-cz27429.tw1.ru/p2-seabattle/p2-config-instance.git
+##    - dotnet build p2-config-instance/src/Config/Config.Instance/Config.Instance.csproj --output app
+##    - dotnet build src/ResourcePack/ResourcePack.Raw/ResourcePack.Raw.csproj --output app
+##    - cd app
+##    - ./ResourcePack.Raw --dll Config.Instance.dll
+##    - curl -X PUT --header "Content-Type:multipart/form-data" -F "bin=@output.zip;type=application/zip" --request PUT ${SHARE_URL}
