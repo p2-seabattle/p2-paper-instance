@@ -4,7 +4,7 @@ deploy:
   namespace: default
 ---
 image: _rcon
-from: http://registry.{{ env "HOST_NAME" }}:32000/p2-rcon
+from: http://registry.{{ env "HOST_NAME" }}:32000/p2-rcon:latest
 fromLatest: true
 ---
 image: _config
