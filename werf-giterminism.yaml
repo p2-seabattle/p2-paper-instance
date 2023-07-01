@@ -3,5 +3,6 @@ config:
   goTemplateRendering:
     allowEnvVariables: [ /.*/ ]
   stapel:
+    allowFromLatest: true
     git:
       allowBranch: true
