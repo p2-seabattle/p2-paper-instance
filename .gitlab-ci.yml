@@ -12,16 +12,16 @@ default:
 before_script:
   - type trdl && . $(trdl use werf 1.2 stable)
   - type werf && source $(werf ci-env gitlab --as-file)
+  - HOST_NAME=${CI_SERVER_HOST:7}
 
-configure:
-  stage: config
-  script:
-    - git clone --branch $CI_COMMIT_BRANCH --recurse-submodules -j8 http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.1437703-cz27429.tw1.ru/p2-seabattle/p2-config-instance.git
-    - dotnet build p2-config-instance/src/Config/Config.Instance/Config.Instance.csproj --output app -p:StartupObject=Config.Instance.Paper.PaperLoader
-    - rm -rf p2-config-instance
-    - dotnet run app/Config.Instance.dll plugins/p2
-    - ls -l
-    - ls -l plugins/p2
+# configure:
+#   stage: config
+#   script:
+#     - git clone --branch $CI_COMMIT_BRANCH --recurse-submodules -j8 http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.1437703-cz27429.tw1.ru/p2-seabattle/p2-config-instance.git
+#     - dotnet build p2-config-instance/src/Config/Config.Paper/Config.Paper.csproj --output app
+#     - app/Config.Paper plugins/p2-ignore
+#     - rm -rf app
+#     - rm -rf p2-config-instance
 
 werf build:
   stage: build
@@ -31,14 +31,18 @@ werf build:
     - if: $CI_PIPELINE_SOURCE == "push"
     - if: $CI_PIPELINE_SOURCE == "pipeline"
   script:
+    - echo $HOST_NAME
     - werf build
+  variables:
+    HOST_NAME: $HOST_NAME
+    
 
-werf deploy:
+werf deploy master:
   stage: deploy
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"
-    - if: $CI_PIPELINE_SOURCE == "web"
-    - if: $CI_PIPELINE_SOURCE == "pipeline"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "dev"
   script:
-    - werf converge --repo=registry.1437703-cz27429.tw1.ru:32000/p2-paper-instance --insecure-registry 
-      
+    - werf converge --repo=registry.$HOST_NAME:32000/p2-paper-instance \
+        --insecure-registry \
+        --set "HOST_NAME=$HOST_NAME"
