@@ -1,0 +1,8 @@
+giterminismConfigVersion: 1
+config:
+  goTemplateRendering:
+    allowEnvVariables: [ /.*/ ]
+  stapel:
+    allowFromLatest: true
+    git:
+      allowBranch: true
